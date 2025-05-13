@@ -20,7 +20,7 @@ public class TankUpdateService {
         this.tankHistoryRepository = tankHistoryRepository;
     }
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 50000)
     public void tankMassUpdate() {
         for (TankModel tankModel : tankRepository.findAll()) {
             TankHistoryModel tankHistoryModel = new TankHistoryModel();
