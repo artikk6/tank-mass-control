@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчёты по резервуарам</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Отчёты по резервуарам</h1>
+    <form id="filterForm">
+        <label for="tankId">Номер резервуара:</label>
+        <input type="number" id="tankId" name="tankId" required>
+        <br><br>
+        <label for="startDate">Начальная дата:</label>
+        <input type="datetime-local" id="startDate" name="startDate" required>
+        <br><br>
+        <label for="endDate">Конечная дата:</label>
+        <input type="datetime-local" id="endDate" name="endDate" required>
+        <br><br>
+        <button type="submit">Построить отчёт</button>
+    </form>
+
+    <table id="reportTable">
+        <thead>
+            <tr>
+                <th>Дата и время</th>
+                <th>Масса</th>
+                <th>Объём</th>
+                <th>Плотность</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('filterForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const tankId = document.getElementById('tankId').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            const response = await fetch(`/api/history/filter?tankId=${tankId}&startDate=${startDate}&endDate=${endDate}`);
+            if (!response.ok) {
+                alert('Ошибка при получении данных');
+                return;
+            }
+
+            const data = await response.json();
+            const tableBody = document.getElementById('reportTable').querySelector('tbody');
+            tableBody.innerHTML = ''; 
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.localDateTime}</td>
+                    <td>${item.mass}</td>
+                    <td>${item.volume}</td>
+                    <td>${item.density}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
