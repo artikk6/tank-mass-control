@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: "jdbc:postgresql://localhost:5432/tank"
-    username: "postgres"
-    password: "~CAbPQxG"
+    username: ""
+    password: ""
   jpa:
     hibernate:
       ddl-auto: update
